@@ -1,0 +1,13 @@
+{
+    "name": "all-things",
+    "version": "1.0.0",
+    "description": "compose demo - API",
+    "main": "index.js",
+    "author": "@k33g",
+    "license": "MIT",
+    "dependencies": {
+      "@fastify/redis": "^6.1.1",
+      "fastify": "^4.26.0",
+      "@fastify/cors": "^8.0.0"
+    }
+  }

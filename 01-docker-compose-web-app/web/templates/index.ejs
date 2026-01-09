@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <title>🐳 Compose</title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta charset="utf-8">
+
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+  <link rel="stylesheet" href="./css/bulma.min.css">
+
+</head>
+  <body>
+    <div class="container">
+      <section class="hero is-medium">
+        <div class="hero-body">
+          <p class="title is-1">
+            All things 🐳 Compose At Docker 😍
+          </p>
+          <p class="subtitle is-1">
+            Vote for your favourite animal
+          </p>
+
+          <div class="content">
+            <div class="buttons are-large">
+              <button id="btn_panda" class="button is-info is-light">🐼 Panda</button>
+              <button id="btn_tiger" class="button is-success is-light">🐯 Tiger</button>
+              <button id="btn_fox" class="button is-warning is-light">🦊 Fox</button>
+              <button id="btn_hamster" class="button is-danger is-light">🐹 Hamster</button>
+            </div>
+          </div>
+
+          <div class="content">
+            <div class="tags are-medium">
+              <span id="tag_panda" class="tag is-info is-light">Panda</span>
+              <span id="tag_tiger" class="tag is-success is-light">Tiger</span>
+              <span id="tag_fox" class="tag is-warning is-light">Fox</span>
+              <span id="tag_hamster" class="tag is-danger is-light">Hamster</span>
+            </div>
+          </div>
+
+        </div>
+      </section>
+    </div>
+    <script>
+
+      let tag_panda = document.querySelector("#tag_panda")
+      let tag_tiger = document.querySelector("#tag_tiger")
+      let tag_fox = document.querySelector("#tag_fox")
+      let tag_hamster = document.querySelector("#tag_hamster")
+
+      let counters = []
+      counters["Panda"] = 0
+      counters["Tiger"] = 0
+      counters["Fox"] = 0
+      counters["Hamster"] = 0
+
+      function allVotes() {
+        return counters["Panda"] + counters["Tiger"] + counters["Fox"] + counters["Hamster"]
+      }
+
+      function setTagValue(tag, label, value) {
+        counters[label] = Number(value)
+        tag.innerHTML = label+": "+((Number(value)/allVotes())*100).toFixed(2)+"%"
+      }
+      
+      const intervalID = setInterval(function() {
+        fetch("<%= apiURL %>/counter/panda").then(response => response.json()).then(data => setTagValue(tag_panda, `Panda`, data)).catch(err => console.log(err))
+        fetch("<%= apiURL %>/counter/tiger").then(response => response.json()).then(data => setTagValue(tag_tiger, `Tiger`, data)).catch(err => console.log(err))
+        fetch("<%= apiURL %>/counter/fox").then(response => response.json()).then(data => setTagValue(tag_fox, `Fox`, data)).catch(err => console.log(err))
+        fetch("<%= apiURL %>/counter/hamster").then(response => response.json()).then(data => setTagValue(tag_hamster, `Hamster`, data)).catch(err => console.log(err))
+      }, 1000);
+
+      async function postJSON(data) {
+        try {
+          const response = await fetch("<%= apiURL %>/counter", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+          })
+          const result = await response.json()
+          return result
+        } catch (error) {
+          return error
+        }
+      }
+
+      let btn_panda = document.querySelector("#btn_panda")
+      let btn_tiger = document.querySelector("#btn_tiger")
+      let btn_fox = document.querySelector("#btn_fox")
+      let btn_hamster = document.querySelector("#btn_hamster")
+
+      btn_panda.addEventListener("click", async _ => {
+        let result = await postJSON({animal: "panda"})
+        console.log(result)
+      })
+
+      btn_tiger.addEventListener("click", async _ => {
+        let result = await postJSON({animal: "tiger"})
+        console.log(result)
+      })
+
+      btn_fox.addEventListener("click", async _ => {
+        let result = await postJSON({animal: "fox"})
+        console.log(result)
+      })
+
+      btn_hamster.addEventListener("click", async _ => {
+        let result = await postJSON({animal: "hamster"})
+        console.log(result)
+      })
+
+    </script>
+  </body>
+
+</html>

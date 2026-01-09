@@ -1,0 +1,16 @@
+global:
+  scrape_interval: 5s
+scrape_configs:
+  - job_name: "service-home-page"
+    static_configs:
+#      - targets: ["localhost:8888"]
+#      - targets: ["0.0.0.0:8888"]
+#      - targets: ["service-home-page:6500"]
+      - targets: ["service-home-page:6000"]
+#      - targets: ["localhost:6000"]
+#  - job_name: "service-hello"
+#    static_configs:
+#      - targets: ["service-hello:6100"]
+#  - job_name: "service-hey"
+#    static_configs:
+#      - targets: ["service-hey:6200"]

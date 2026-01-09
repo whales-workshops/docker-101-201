@@ -1,0 +1,11 @@
+title: Labspace starter
+description: |
+  A basic template for creating a Labspace, including all of the boilerplate needed to write and publish a Labspace.
+
+sections:
+  - title: Introduction
+    contentPath: .labspace/00-introduction.md
+  - title: Hello Compose for Devs
+    contentPath: .labspace/01-hello-compose.md
+  - title: Hello Compose - Multi-container application
+    contentPath: .labspace/02-hello-compose.md

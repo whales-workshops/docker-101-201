@@ -1,0 +1,62 @@
+services:
+
+  redis-server:
+    image: redis:7.2.4
+    environment: 
+      - REDIS_ARGS="--save 30 1"
+    volumes:
+      - redis-data:/data
+    ports:
+      - 6379:6379
+    networks:
+      - backend
+
+  ## API
+  api:
+    build:        
+      context: ./api
+      dockerfile: api.Dockerfile
+    environment:
+      - FRONT_URL=http://localhost:7070
+      #- FRONT_URL=http://webapp:7070
+      # to allow the front to connect to the API (CORS, Cross-Origin Resource Sharing)
+    ports:
+      - 6060:8080
+      # query the API on http://localhost:6060/counter
+    depends_on:
+      redis-server:
+        condition: service_started
+    # ✋
+    networks:
+      - backend
+      - frontend
+
+  ## FrontEnd
+  webapp:
+    build:        
+      context: ./web
+      dockerfile: web.Dockerfile
+    environment:
+      - API_URL=http://localhost:6060
+      #- API_URL=http://api:8080
+    ports:
+      - 7070:8080
+    # open the webapp http://localhost:7070/
+    depends_on:
+      api:
+        condition: service_started
+    # ✋ docker compose up --watch
+    develop:
+      watch:
+        - action: sync
+          path: web/templates
+          target: app/templates
+    networks:
+      - frontend
+
+volumes:
+  redis-data:
+
+networks:
+  frontend:
+  backend:
