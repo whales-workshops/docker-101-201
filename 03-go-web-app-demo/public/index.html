@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <title>GoLang Docker Compose Stack</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta charset="utf-8">
+  
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+
+    <script type="module" src="js/beer.min.js"></script>
+    <script type="module" src="js/material-dynamic-colors.min.js"></script>
+
+    <!--
+    <script src="./js/markdown-it.min.js"></script>
+    -->
+
+    <link rel="stylesheet" href="css/beer.min.css">
+
+    <script src="js/htmx.min.js"></script>
+    <script src="js/client-side-templates.js"></script>
+    <script src="js/mustache.js"></script>
+
+    <style>
+        :root,
+        body.light {
+            --primary:#006493;
+            --on-primary:#ffffff;
+            --primary-container:#cae6ff;
+            --on-primary-container:#001e30;
+            --secondary:#50606e;
+            --on-secondary:#ffffff;
+            --secondary-container:#d3e5f5;
+            --on-secondary-container:#0c1d29;
+            --tertiary:#65587b;
+            --on-tertiary:#ffffff;
+            --tertiary-container:#ebddff;
+            --on-tertiary-container:#201634;
+            --error:#ba1a1a;
+            --on-error:#ffffff;
+            --error-container:#ffdad6;
+            --on-error-container:#410002;
+            --background:#fcfcff;
+            --on-background:#1a1c1e;
+            --surface:#f9f9fc;
+            --on-surface:#1a1c1e;
+            --surface-variant:#dde3ea;
+            --on-surface-variant:#41474d;
+            --outline:#72787e;
+            --outline-variant:#c1c7ce;
+            --shadow:#000000;
+            --scrim:#000000;
+            --inverse-surface:#2e3133;
+            --inverse-on-surface:#f0f0f3;
+            --inverse-primary:#8dcdff;
+            --surface-dim:#d9dadd;
+            --surface-bright:#f9f9fc;
+            --surface-container-lowest:#ffffff;
+            --surface-container-low:#f3f3f6;
+            --surface-container:#edeef1;
+            --surface-container-high:#e8e8eb;
+            --surface-container-highest:#e2e2e5;
+        }
+    </style>
+
+</head>
+
+<body>
+    <main class="responsive" id="content">
+
+        <!--
+        Load Json data + display with mustache
+        with the htmx extension: hx-ext="client-side-templates"
+        -->
+        <div hx-ext="client-side-templates"
+                hx-get="/api/variables"
+                hx-trigger="load"
+                mustache-template="variables-tpl">
+        </div>
+        <template id="variables-tpl">
+            <h1>{{ mainTitle }}🤖</h1>
+            <h4>{{ appName }}</h4>
+            <h4>{{ message }}</h4>
+        </template>
+
+        <div hx-ext="client-side-templates">
+            <table hx-get="/api/restaurants" hx-swap="innerHTML" hx-target="#restaurants-list" hx-trigger="load" mustache-array-template="restaurants-list-tpl">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Address</th>
+                        <th>Website</th>
+                        <th>Phone</th>
+                        <th>Tags</th>
+                    </tr>
+                </thead>
+                <tbody id="restaurants-list">
+        
+                </tbody>
+            </table>
+        
+            <template id="restaurants-list-tpl">
+                {{#data}}
+                <tr>
+                    <td><span>{{ id }}</span></td>
+                    <td><span>{{ name }}</span></td>
+                    <td><span>{{ address }}</span></td>
+                    <td><span>{{ website }}</span></td>
+                    <td><span>{{ phone }}</span></td>
+                    <td><span>{{ tags}}</span></td>
+                </tr>
+                {{/data}}
+            </template>
+        </div>
+
+        <!--
+        Load Json data
+        See the javacript event
+        -->
+        <div id="result_variables" 
+            hx-get="/api/variables" 
+            hx-trigger="load" 
+            hx-swap="none">
+        </div>
+
+        <div id="result_info" 
+            hx-get="/api/info" 
+            hx-trigger="load" 
+            hx-target="#display_result_info">
+            <hr>
+            <h6 id="display_result_info"></h6>
+        </div>
+
+    </main>
+    
+    <script>
+        /*
+        document.body.addEventListener('htmx:afterOnLoad', function(evt) {
+            console.log("👋 htmx:afterOnLoad:", evt.detail.target.id)
+            if (evt.detail.target.id === "content") {
+                console.log("👋 content loaded:", evt.srcElement.baseURI)
+            }
+        })
+        */
+
+        document.body.addEventListener('htmx:afterRequest', function(evt) {
+            // Triggered by the "load" hx-trigger of id="result"
+            if (evt.detail.elt.id === 'result_variables') {
+                const data = JSON.parse(evt.detail.xhr.responseText)
+                console.log("👋 htmx:afterRequest:", data)
+                // Traitez les données JSON ici
+               //document.getElementById('result').innerText = data
+            }
+            if (evt.detail.elt.id === 'result_info') {
+                const data = evt.detail.xhr.responseText
+                console.log("📝 htmx:afterRequest:", data)
+            }
+        })
+
+    </script>
+    <!-- without template extension
+    <div hx-get="/api/variables"
+        hx-trigger="load"
+        hx-template="variables-tpl">
+    </div>
+    <script>
+    htmx.on("htmx:afterRequest", function(evt) {
+        if (evt.detail.elt.getAttribute("hx-template")) {
+            var template = document.getElementById(evt.detail.elt.getAttribute("hx-template")).innerHTML
+            var rendered = Mustache.render(template, JSON.parse(evt.detail.xhr.responseText))
+            evt.detail.elt.innerHTML = rendered
+        }
+    })
+    </script>
+    -->
+</body>
+</html>

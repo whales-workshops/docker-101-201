@@ -1,0 +1,6 @@
+#.dockerignore
+#compose.yaml
+#Dockerfile
+#README.Docker.md
+#out
+dump.rdb

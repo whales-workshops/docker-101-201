@@ -9,3 +9,5 @@ sections:
     contentPath: .labspace/01-hello-compose.md
   - title: Hello Compose - Multi-container application
     contentPath: .labspace/02-hello-compose.md
+  - title: Testing with Testcontainers
+    contentPath: .labspace/03-testcontainers.md

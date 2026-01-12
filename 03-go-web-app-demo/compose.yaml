@@ -1,0 +1,31 @@
+services:
+  redis-server:
+    image: redis:7.2.4
+    environment: 
+      - REDIS_ARGS=--save 30 1
+      # snapshot
+    ports:
+      - 6379:6379
+    volumes:
+      - ./scripts:/scripts
+      - ./data:/data
+
+  webapp:
+    build: .
+    image: paris-restaurants
+    ports:
+      - 8080:8080 
+    environment:
+      - MESSAGE=🎉 Hello from 🐳 Compose 👋
+      - TITLE=My favorite restaurants
+      - REDIS_URL=redis-server:6379    
+    depends_on:
+      - redis-server 
+    develop:
+      watch:
+        - action: sync
+          path: ./public
+          target: /app/public
+        - action: rebuild
+          path: .
+          include: ["*.go", "Dockerfile"]
