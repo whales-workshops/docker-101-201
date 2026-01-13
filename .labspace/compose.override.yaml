@@ -5,8 +5,9 @@ services:
 
   workspace:
    # Override the default image if desired
-    image: philippecharriere494/labspace-workspace-golang:1.25.5_0.0.0
-
+    image: philippecharriere494/labspace-workspace-golang:1.25.5_0.0.1
+    # volumes:
+    #   - /etc/labspace-support/socket:/etc/labspace-support/socket
     # models:
     #   cook-model:
     #     endpoint_var: MODEL_RUNNER_BASE_URL
