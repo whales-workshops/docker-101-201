@@ -34,15 +34,6 @@ A simple Node.js web application demonstrating basic Docker Compose usage with:
 User → WebApp (7070) → API (6060) → Redis (6379)
 ```
 
-**Usage**:
-```bash
-cd 01-docker-compose-web-app
-docker compose up --build        # Initial start
-docker compose up --watch        # Development mode with live reload
-```
-
----
-
 ## 02 - Docker Compose Complex Architecture
 
 **Purpose**: Multi-container microservices with reverse proxy and monitoring
@@ -73,14 +64,6 @@ User (8888) → Nginx → Services (home/hello/hey)
 - Hey: `http://localhost:8888/hey` or `:6200`
 - Grafana: `http://localhost:4000`
 - Prometheus: `http://localhost:9090`
-
-**Usage**:
-```bash
-cd 02-docker-compose-complex-architecture
-docker compose up
-```
-
----
 
 ## 03 - Go Web App Demo | Testcontainers
 
@@ -117,45 +100,3 @@ Test Suite → Docker Model Runner → Qwen 2.5 LLM
 - [TESTING.md](03-go-web-app-demo/TESTING.md) - Redis integration tests with Testcontainers
 - [TESTING-LLM.md](03-go-web-app-demo/TESTING-LLM.md) - LLM testing with Docker Model Runner
 
-**Usage**:
-```bash
-cd 03-go-web-app-demo
-docker compose up --build        # Run application
-go test -v                       # Run all tests
-go test -v -run TestGetRestaurant          # Redis integration test
-go test -v -run TestHawaiianPizzaExpert    # LLM test
-```
-
----
-
-## Workshop Progression
-
-1. **Demo 01**: Learn Docker Compose basics and development workflows
-2. **Demo 02**: Scale to microservices with monitoring and reverse proxy
-3. **Demo 03**: Implement production-ready patterns with comprehensive testing
-
-## Prerequisites
-
-- Docker Desktop (with AI features for demo 03 LLM tests)
-- Docker Compose V2
-- Go 1.25+ (for demo 03)
-- Node.js 18+ (for demos 01-02)
-
-## Common Commands
-
-```bash
-# Start services
-docker compose up
-
-# Start with build
-docker compose up --build
-
-# Start in watch mode (development)
-docker compose up --watch
-
-# Stop services
-docker compose down
-
-# View logs
-docker compose logs -f
-```
